@@ -1,31 +1,19 @@
 import { toast } from "sonner"
 
-export type PhantomEvent = "connect" | "disconnect" | "accountChanged"
-
-export interface PhantomProvider {
-  publicKey: { toString(): string } | null
-  isPhantom: boolean // Changed from isPhantom?: boolean to isPhantom: boolean
-  isConnected: boolean
-  signMessage: (message: Uint8Array) => Promise<{ signature: Uint8Array }>
-  signTransaction: (transaction: any) => Promise<any>
-  connect: ({ onlyIfTrusted }: { onlyIfTrusted?: boolean }) => Promise<{ publicKey: { toString(): string } }>
+// Define the PhantomProvider type
+interface PhantomProvider {
+  connect: (args?: { onlyIfTrusted: boolean }) => Promise<{ publicKey: { toString: () => string } }>
   disconnect: () => Promise<void>
   on: (event: PhantomEvent, callback: (args: any) => void) => void
-  request: (request: { method: string; params?: any | undefined }) => Promise<any>
+  publicKey: { toString: () => string } | null
+  isConnected: boolean
 }
 
-export interface WindowWithPhantom extends Window {
-  phantom?: {
-    solana?: PhantomProvider
-  }
-  solana?: PhantomProvider
-}
+export type PhantomEvent = "connect" | "disconnect" | "accountChanged"
 
-// Instead of extending Window, let's use a type assertion approach
 export const getPhantomProvider = (): PhantomProvider | null => {
   if (typeof window !== "undefined") {
-    // Use type assertion instead of extending Window
-    const provider = window.phantom?.solana || (window.solana as PhantomProvider | undefined)
+    const provider = window.phantom?.solana || window.solana
 
     if (provider?.isPhantom) {
       return provider
@@ -107,4 +95,3 @@ export const listenToWalletEvents = (onConnect: (publicKey: string) => void, onD
     // This is a limitation of the current Phantom API
   }
 }
-

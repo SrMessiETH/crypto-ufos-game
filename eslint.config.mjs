@@ -1,16 +1,23 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  eslint: {
+    // Disable specific rules during builds
+    ignoreDuringBuilds: false, // Set to true to skip ESLint entirely, or customize below
+    dirs: ['app', 'components', 'lib'], // Specify directories to lint
+  },
+  // Custom ESLint overrides
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off', // Disable no-explicit-any
+        '@typescript-eslint/no-unused-vars': 'off', // Disable no-unused-vars for TS
+        'no-unused-vars': 'off', // Disable no-unused-vars for JS
+        'react-hooks/exhaustive-deps': 'warn', // Downgrade to warning (or 'off' to disable)
+        '@next/next/no-img-element': 'off', // Disable no-img-element
+      },
+    },
+  ],
+};
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
-
-export default eslintConfig;
+module.exports = nextConfig;

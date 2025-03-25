@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Activity, ZoomIn, ZoomOut } from "lucide-react"
-import { toast } from "sonner"
+import { toast, Toaster } from "sonner"; // Add Toaster to imports
 import { initializeApp } from "firebase/app"
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc, setDoc } from "firebase/firestore"
 import WalletConnect from "@/components/wallet-connect"
@@ -52,8 +52,8 @@ const GAME_ASSETS = {
 }
 
 // Add these constants at the top of the file, after the GAME_ASSETS definition
-const API_URL = "https://mainnet.helius-rpc.com/?api-key=YOUR_HELIUS_API_KEY"
-const COLLECTION_ADDRESS = "YOUR_COLLECTION_ADDRESS"
+const API_URL = "https://mainnet.helius-rpc.com/?api-key=3d0ad7ca-7869-4a97-9d3e-a57131ae89db"
+const COLLECTION_ADDRESS = "53UVubjHQpC4RmUnDGU1PV3f2bYFk6GcWb3SgtYFMHTb"
 
 // First, let's add a new interface for power cell slots and a function to determine available slots
 // Add this after the determineUserTier function
@@ -263,6 +263,7 @@ export default function CryptoUFOsGame() {
       console.error("Error initializing Firebase:", error)
       toast.error("Failed to connect to database", {
         description: "Using local data instead.",
+        duration: 3000, // 3 seconds
       })
       setIsLoading(false)
     }
@@ -370,6 +371,7 @@ export default function CryptoUFOsGame() {
 
               toast.success("Data Loaded", {
                 description: "Your game data has been loaded successfully.",
+                duration: 3000, // 3 seconds
               })
             } else {
               // User doesn't exist, create new user
@@ -423,6 +425,7 @@ export default function CryptoUFOsGame() {
               setUserData(newUserData)
               toast.success("Welcome!", {
                 description: "New account created. Let's start playing!",
+                duration: 3000, // 3 seconds
               })
             }
           } catch (error) {
@@ -434,6 +437,7 @@ export default function CryptoUFOsGame() {
             })
             toast.error("Error loading data", {
               description: "Using default data instead.",
+              duration: 3000, // 3 seconds
             })
           } finally {
             setIsLoading(false)
@@ -554,6 +558,7 @@ export default function CryptoUFOsGame() {
       console.error("Error saving user data:", error)
       toast.error("Failed to save data to database", {
         description: "Your changes are only saved locally.",
+        duration: 3000, // 3 seconds
       })
     }
   }
@@ -738,6 +743,7 @@ export default function CryptoUFOsGame() {
 
     toast("Power Cell Charged!", {
       description: "Your power cell is now fully charged and ready to claim.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -763,6 +769,7 @@ export default function CryptoUFOsGame() {
 
     toast("Ice Mining Complete!", {
       description: `Found ${iceFound} Ice and ${ufosFound} UFOS!`,
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -778,7 +785,8 @@ export default function CryptoUFOsGame() {
     saveUserData(updatedUserData)
 
     toast("Water Filtering Complete!", {
-      description: "Your water filter has finished processing.",
+      description: "Your water filter has finished processing.",  
+      duration: 3000, // 3 seconds   
     })
   }
 
@@ -795,6 +803,7 @@ export default function CryptoUFOsGame() {
 
     toast("Workshop Complete!", {
       description: "Your workshop has finished repairing power cells.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -802,6 +811,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -809,6 +819,7 @@ export default function CryptoUFOsGame() {
     if (userData.emptyPowerCell < 1) {
       toast.error("Not Enough Empty Power Cells", {
         description: "You need at least one empty power cell to start charging.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -816,6 +827,7 @@ export default function CryptoUFOsGame() {
     if (userData.chargingPowerCell > 0) {
       toast.error("Already Charging", {
         description: "You already have a power cell charging.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -832,6 +844,7 @@ export default function CryptoUFOsGame() {
 
     toast("Power Cell Charging Started", {
       description: "Your power cell will be ready in 12 hours.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -839,6 +852,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -846,6 +860,7 @@ export default function CryptoUFOsGame() {
     if (userData.claimableFullPowerCell < 1) {
       toast.error("No Power Cells to Claim", {
         description: "You don't have any fully charged power cells to claim.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -861,6 +876,7 @@ export default function CryptoUFOsGame() {
 
     toast("Power Cell Claimed", {
       description: "You've claimed a fully charged power cell!",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -868,6 +884,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -875,6 +892,7 @@ export default function CryptoUFOsGame() {
     if (userData.fullPowerCell < 1) {
       toast.error("Not Enough Full Power Cells", {
         description: "You need at least one full power cell to start the ice miner.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -882,6 +900,7 @@ export default function CryptoUFOsGame() {
     if (userData.scavengerWorking > 0) {
       toast.error("Already Mining", {
         description: "Your ice miner is already working.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -898,6 +917,7 @@ export default function CryptoUFOsGame() {
 
     toast("Ice Mining Started", {
       description: "Your ice miner will complete in 6 hours.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -905,6 +925,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -912,6 +933,7 @@ export default function CryptoUFOsGame() {
     if (userData.scavengerWorkingEnd < 1) {
       toast.error("Nothing to Claim", {
         description: "Your ice miner hasn't completed its work yet.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -926,6 +948,7 @@ export default function CryptoUFOsGame() {
 
     toast("Mining Results Claimed", {
       description: "You've claimed your ice mining results!",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -933,6 +956,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -940,6 +964,7 @@ export default function CryptoUFOsGame() {
     if (userData.fullPowerCell < 1 || userData.ice < 1000) {
       toast.error("Insufficient Resources", {
         description: "You need 1 full power cell and 1000 ice to start the water filter.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -947,6 +972,7 @@ export default function CryptoUFOsGame() {
     if (userData.chargingWaterFilter > 0) {
       toast.error("Already Filtering", {
         description: "Your water filter is already working.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -964,6 +990,7 @@ export default function CryptoUFOsGame() {
 
     toast("Water Filtering Started", {
       description: "Your water filter will complete in 8 hours.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -971,6 +998,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -978,6 +1006,7 @@ export default function CryptoUFOsGame() {
     if (userData.claimableWater < 1) {
       toast.error("Nothing to Claim", {
         description: "Your water filter hasn't completed its work yet.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1001,6 +1030,7 @@ export default function CryptoUFOsGame() {
 
     toast("Water Filter Results Claimed", {
       description: `You gained ${waterGained} water and ${haliteGained} minerals!`,
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1008,6 +1038,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1015,6 +1046,7 @@ export default function CryptoUFOsGame() {
     if (userData.fullPowerCell < 1 || userData.brokenPowerCell < 10 || userData.water < 5 || userData.halite < 2) {
       toast.error("Insufficient Resources", {
         description: "You need 1 full power cell, 10 broken power cells, 5 water, and 2 minerals.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1022,6 +1054,7 @@ export default function CryptoUFOsGame() {
     if (userData.chargingWorkShop > 0) {
       toast.error("Already Working", {
         description: "Your workshop is already repairing power cells.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1041,6 +1074,7 @@ export default function CryptoUFOsGame() {
 
     toast("Workshop Started", {
       description: "Your workshop will complete repairs in 10 hours.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1048,6 +1082,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1055,6 +1090,7 @@ export default function CryptoUFOsGame() {
     if (userData.claimableEmptyPowerCell < 1) {
       toast.error("Nothing to Claim", {
         description: "Your workshop hasn't completed its work yet.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1074,6 +1110,7 @@ export default function CryptoUFOsGame() {
 
     toast("Workshop Results Claimed", {
       description: `You gained ${emptyPowerCellGained} empty power cells!`,
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1081,6 +1118,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1088,6 +1126,7 @@ export default function CryptoUFOsGame() {
     if (userData.ufos < 50) {
       toast.error("Not Enough UFOS", {
         description: "You need 50 UFOS to buy an empty power cell.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1103,6 +1142,7 @@ export default function CryptoUFOsGame() {
 
     toast("Purchase Successful", {
       description: "You bought 1 empty power cell for 50 UFOS.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1110,6 +1150,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1117,6 +1158,7 @@ export default function CryptoUFOsGame() {
     if (userData.fullPowerCell < 1) {
       toast.error("Not Enough Full Power Cells", {
         description: "You need at least one full power cell to sell.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1132,6 +1174,7 @@ export default function CryptoUFOsGame() {
 
     toast("Sale Successful", {
       description: "You sold 1 full power cell for 100 UFOS.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1140,6 +1183,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1152,6 +1196,7 @@ export default function CryptoUFOsGame() {
       const hoursRemaining = Math.ceil(24 - hoursSinceLastClaim)
       toast.error("Daily Reward Not Available", {
         description: `You can claim again in ${hoursRemaining} hours.`,
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1171,6 +1216,7 @@ export default function CryptoUFOsGame() {
 
     toast("Daily Reward Claimed", {
       description: `You received ${rewardAmount} UFOS for holding ${userData.nfts} Crypto UFOs NFTs!`,
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1180,6 +1226,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1187,6 +1234,7 @@ export default function CryptoUFOsGame() {
     if (transferWallet === userData.wallet) {
       toast.error("Invalid Transfer", {
         description: "You cannot transfer UFOS to yourself.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1194,6 +1242,7 @@ export default function CryptoUFOsGame() {
     if (transferAmount <= 0 || transferAmount > userData.ufos) {
       toast.error("Invalid Amount", {
         description: "Please enter a valid amount to transfer.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1201,6 +1250,7 @@ export default function CryptoUFOsGame() {
     if (!firestore) {
       toast.error("Database Not Connected", {
         description: "Cannot transfer UFOS without database connection.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1213,6 +1263,7 @@ export default function CryptoUFOsGame() {
       if (querySnapshot.empty) {
         toast.error("Recipient Not Found", {
           description: "The recipient wallet does not exist in the database.",
+          duration: 3000, // 3 seconds
         })
         return
       }
@@ -1237,6 +1288,7 @@ export default function CryptoUFOsGame() {
 
       toast("Transfer Successful", {
         description: `You transferred ${transferAmount} UFOS to ${transferWallet.substring(0, 6)}...`,
+        duration: 3000, // 3 seconds
       })
 
       setIsTransferFormOpen(false)
@@ -1246,6 +1298,7 @@ export default function CryptoUFOsGame() {
       console.error("Error transferring UFOS:", error)
       toast.error("Transfer Failed", {
         description: "There was an error processing your transfer.",
+        duration: 3000, // 3 seconds
       })
     }
   }
@@ -1256,6 +1309,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1263,6 +1317,7 @@ export default function CryptoUFOsGame() {
     if (!newName.trim()) {
       toast.error("Invalid Name", {
         description: "Please enter a valid name.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1277,6 +1332,7 @@ export default function CryptoUFOsGame() {
 
     toast("Name Changed", {
       description: `Your name has been updated to ${newName}.`,
+      duration: 3000, // 3 seconds
     })
 
     setIsNameFormOpen(false)
@@ -1330,6 +1386,7 @@ export default function CryptoUFOsGame() {
 
     toast("Power Cell Charged!", {
       description: "Your power cell is now fully charged and ready to claim.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1337,6 +1394,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1344,6 +1402,7 @@ export default function CryptoUFOsGame() {
     if (userData.emptyPowerCell < 1) {
       toast.error("Not Enough Empty Power Cells", {
         description: "You need at least one empty power cell to start charging.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1353,6 +1412,7 @@ export default function CryptoUFOsGame() {
     if (slot?.isCharging) {
       toast.error("Already Charging", {
         description: "This slot is already charging a power cell.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1360,6 +1420,7 @@ export default function CryptoUFOsGame() {
     if (slot?.isClaimable) {
       toast.error("Claim First", {
         description: "Please claim the charged power cell first.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1392,6 +1453,7 @@ export default function CryptoUFOsGame() {
 
     toast("Power Cell Charging Started", {
       description: "Your power cell will be ready in 12 hours.",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1399,6 +1461,7 @@ export default function CryptoUFOsGame() {
     if (!walletConnected) {
       toast.error("Wallet Not Connected", {
         description: "Please connect your wallet to play the game.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1408,6 +1471,7 @@ export default function CryptoUFOsGame() {
     if (!slot?.isClaimable) {
       toast.error("Nothing to Claim", {
         description: "This slot doesn't have a fully charged power cell to claim.",
+        duration: 3000, // 3 seconds
       })
       return
     }
@@ -1441,6 +1505,7 @@ export default function CryptoUFOsGame() {
 
     toast("Power Cell Claimed", {
       description: "You've claimed a fully charged power cell!",
+      duration: 3000, // 3 seconds
     })
   }
 
@@ -1457,6 +1522,9 @@ export default function CryptoUFOsGame() {
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
+      {/* Add the Toaster component here */}
+      <Toaster richColors position="top-right" />
+      
       {/* Wallet Connection */}
       <div className="fixed top-5 left-5 z-50">
         <WalletConnect
@@ -1549,7 +1617,7 @@ export default function CryptoUFOsGame() {
       </div>
 
       {/* Wallet Info Panel */}
-      <Card className="fixed top-5 right-5 w-[300px] bg-black/80 border-white text-white z-50">
+      <Card className="fixed top-5 right-5 w-[300px] bg-white/40 border-white text-black z-50">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-lg font-bold text-green-400">{userData.name || "Player"}</h3>
@@ -1562,7 +1630,7 @@ export default function CryptoUFOsGame() {
           <p className="text-sm mb-2">
             Tier: {determineUserTier(userData.nfts)}
             <span className="text-xs text-gray-400 ml-1">
-              ({userData.nfts >= 150 ? "Max" : `${150 - userData.nfts} more NFTs to next tier`})
+              ({userData.nfts >= 150 ? "Max Tier Reached" : `${((determineUserTier(userData.nfts) + 1)*10) - userData.nfts} more NFTs to next tier`})
             </span>
           </p>
 
@@ -1585,13 +1653,13 @@ export default function CryptoUFOsGame() {
           </Button>
 
           {isInventoryOpen && (
-            <div className="mt-2 space-y-2 p-2 bg-gray-900 rounded-md">
+            <div className="mt-2 space-y-2 p-2 bg-gray-500 rounded-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <img
                     src={GAME_ASSETS.batteryEmpty || "/placeholder.svg"}
                     alt="Empty Power Cells"
-                    className="w-5 h-5 mr-1"
+                    className="w-10 h-10 mr-1"
                   />
                   <span>Empty Cells:</span>
                 </div>
@@ -1603,7 +1671,7 @@ export default function CryptoUFOsGame() {
                   <img
                     src={GAME_ASSETS.batteryFull || "/placeholder.svg"}
                     alt="Full Power Cells"
-                    className="w-5 h-5 mr-1"
+                    className="w-10 h-10 mr-1"
                   />
                   <span>Full Cells:</span>
                 </div>
@@ -1615,7 +1683,7 @@ export default function CryptoUFOsGame() {
                   <img
                     src={GAME_ASSETS.batteryBroken || "/placeholder.svg"}
                     alt="Broken Power Cells"
-                    className="w-5 h-5 mr-1"
+                    className="w-10 h-10 mr-1"
                   />
                   <span>Broken Cells:</span>
                 </div>
@@ -1624,7 +1692,7 @@ export default function CryptoUFOsGame() {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img src={GAME_ASSETS.ice || "/placeholder.svg"} alt="Ice" className="w-5 h-5 mr-1" />
+                  <img src={GAME_ASSETS.ice || "/placeholder.svg"} alt="Ice" className="w-10 h-10 mr-1" />
                   <span>Ice:</span>
                 </div>
                 <span>{userData.ice}</span>
@@ -1632,7 +1700,7 @@ export default function CryptoUFOsGame() {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img src={GAME_ASSETS.water || "/placeholder.svg"} alt="Water" className="w-5 h-5 mr-1" />
+                  <img src={GAME_ASSETS.water || "/placeholder.svg"} alt="Water" className="w-10 h-10 mr-1" />
                   <span>Water:</span>
                 </div>
                 <span>{userData.water}</span>
@@ -1640,7 +1708,7 @@ export default function CryptoUFOsGame() {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img src={GAME_ASSETS.mineral || "/placeholder.svg"} alt="Minerals" className="w-5 h-5 mr-1" />
+                  <img src={GAME_ASSETS.mineral || "/placeholder.svg"} alt="Minerals" className="w-10 h-10 mr-1" />
                   <span>Minerals:</span>
                 </div>
                 <span>{userData.halite}</span>
@@ -1652,31 +1720,24 @@ export default function CryptoUFOsGame() {
 
       {/* Leaderboard Button */}
       <Button
-        variant="ghost"
-        className="fixed top-20 left-5 bg-transparent z-50"
-        onClick={() => (window.location.href = "/leaderboard")}
+      variant="ghost"
+      className="fixed top-20 left-5 bg-transparent z-50 bg-contain bg-no-repeat hover:scale-105 transition-transform w-25 h-25"
+      style={{ backgroundImage: `url(${GAME_ASSETS.crown})`, backgroundColor: "transparent" }}
+      onClick={() => (window.location.href = "/leaderboard")}
       >
-        <img src={GAME_ASSETS.crown || "/placeholder.svg"} alt="Leaderboard" className="w-10 h-10" />
       </Button>
 
       {/* Laboratory Modal */}
       {isLaboratoryOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <Card
-            className="w-[600px] bg-black border-white"
-            style={{
-              backgroundImage: `url(${GAME_ASSETS.labBg})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "contain",
-              background: "none",
-              backgroundPosition: "center",
-            }}
+            className="w-[600px] bg-white/70 border-white"
           >
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h2 className="text-xl font-bold text-green-400">Power Cell Charger</h2>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-red-400">
                     {getPowerCellSlots(userData.nfts)} slots available (Tier {determineUserTier(userData.nfts)})
                   </p>
                 </div>
@@ -1700,7 +1761,7 @@ export default function CryptoUFOsGame() {
                           getBatteryImage(slot.isCharging, slot.isClaimable) || "/placeholder.svg" || "/placeholder.svg"
                         }
                         alt="Power Cell"
-                        className="w-12 h-12"
+                        className="w-24 h-24"
                         style={{
                           animation: slot.isCharging ? "pulse 2s infinite" : "none",
                         }}
@@ -1708,13 +1769,16 @@ export default function CryptoUFOsGame() {
                     </Button>
 
                     {slot.isCharging && (
-                      <div className="mt-2">
-                        <Progress value={slot.progress} className="h-2" />
-                        <p className="text-xs mt-1">{formatTimeRemaining(slot.progress, 12)}</p>
-                      </div>
+                    <div className="mt-2">
+                    <Progress 
+                    value={slot.progress} 
+                    className="h-2 w-full bg-gray-700 [&>div]:bg-green-500" 
+                    />
+                    <p className="text-xs mt-1">{formatTimeRemaining(slot.progress, 12)}</p>
+                    </div>
                     )}
 
-                    <div className="absolute top-1 left-1 bg-black/60 rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    <div className="absolute top-1 left-1 bg-black/30 rounded-full w-5 h-5 flex items-center justify-center text-xs">
                       {slot.id + 1}
                     </div>
                   </div>
@@ -1730,12 +1794,12 @@ export default function CryptoUFOsGame() {
                         <img
                           src={GAME_ASSETS.batteryEmpty || "/placeholder.svg"}
                           alt="Empty"
-                          className="w-5 h-5 mr-1"
+                          className="w-15 h-15"
                         />
                         <span className="text-xs">{userData.emptyPowerCell}</span>
                       </div>
                       <div className="flex items-center">
-                        <img src={GAME_ASSETS.batteryFull || "/placeholder.svg"} alt="Full" className="w-5 h-5 mr-1" />
+                        <img src={GAME_ASSETS.batteryFull || "/placeholder.svg"} alt="Full" className="w-15 h-15" />
                         <span className="text-xs">{userData.fullPowerCell}</span>
                       </div>
                     </div>
@@ -1746,7 +1810,7 @@ export default function CryptoUFOsGame() {
                     </p>
                     <div className="flex items-center mt-1">
                       <span className="text-xs mr-2">NFTs: {userData.nfts}</span>
-                      <Progress value={(userData.nfts / 100) * 100} className="w-24 h-2" />
+                      <Progress value={(userData.nfts / 100) * 100} className="w-24 h-2 [&>div]:bg-green-500" />
                     </div>
                   </div>
                 </div>
@@ -1768,16 +1832,22 @@ export default function CryptoUFOsGame() {
           >
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-amber-400">Market</h2>
-                <Button variant="ghost" size="sm" onClick={() => setIsMarketOpen(false)}>
-                  X
-                </Button>
+                <h2 className="text-xl font-bold text-amber-400 ">Market</h2>
+                <Button
+  variant="ghost"
+  size="sm"
+  onClick={() => setIsMarketOpen(false)}
+  className="text-white hover:text-black"
+>
+  X
+</Button>
+
               </div>
 
               <Tabs defaultValue="buy" onValueChange={setActiveMarketTab}>
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="buy" className="flex items-center justify-center">
-                    <img src={GAME_ASSETS.buy || "/placeholder.svg"} alt="Buy" className="w-8 h-8 mr-2" />
+                <TabsList className="grid w-full grid-cols-2 text-gray-500">
+                  <TabsTrigger value="buy" className="flex items-center justify-center text-grey-500">
+                    <img src={GAME_ASSETS.buy || "/placeholder.svg"} alt="Buy" className="w-8 h-8 mr-4" />
                     Buy
                   </TabsTrigger>
                   <TabsTrigger value="sell" className="flex items-center justify-center">
@@ -1792,11 +1862,11 @@ export default function CryptoUFOsGame() {
                       <img
                         src={GAME_ASSETS.batteryEmpty || "/placeholder.svg"}
                         alt="Empty Power Cell"
-                        className="w-12 h-12 mr-4"
+                        className="w-24 h-24 mr-4"
                       />
                       <div>
-                        <h3 className="font-medium">Empty Power Cell</h3>
-                        <p className="text-sm text-gray-400">Price: 50 UFOS</p>
+                        <h3 className="text-xl font-medium text-l text-red-500">Empty Power Cell</h3>
+                        <p className="text-l text-yellow-400">Price: 50 UFOS</p>
                       </div>
                     </div>
                     <Button onClick={buyEmptyPowerCell}>Buy 1</Button>
@@ -1809,11 +1879,11 @@ export default function CryptoUFOsGame() {
                       <img
                         src={GAME_ASSETS.batteryFull || "/placeholder.svg"}
                         alt="Full Power Cell"
-                        className="w-12 h-12 mr-4"
+                        className="w-24 h-24 mr-4"
                       />
                       <div>
-                        <h3 className="font-medium">Full Power Cell</h3>
-                        <p className="text-sm text-gray-400">Price: 100 UFOS</p>
+                        <h3 className="text-xl font-medium text-green-500">Full Power Cell</h3>
+                        <p className="text-l text-yellow-400">Price: 100 UFOS</p>
                       </div>
                     </div>
                     <Button onClick={sellFullPowerCell}>Sell 1</Button>
@@ -1910,77 +1980,77 @@ export default function CryptoUFOsGame() {
         </div>
       )}
 
-      {/* Progress Indicators */}
-      {userData.chargingPowerCell > 0 && (
-        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black/80 p-2 rounded-md z-40">
-          <div className="flex items-center gap-2">
-            <img src={GAME_ASSETS.batteryCharging || "/placeholder.svg"} alt="Charging" className="w-5 h-5" />
-            <Progress value={progressBars.powerCell} className="w-40 h-2" />
-            <span className="text-xs">{formatTimeRemaining(progressBars.powerCell, 12)}</span>
-          </div>
-        </div>
-      )}
-
-      {userData.scavengerWorking > 0 && (
-        <div className="fixed top-32 left-1/2 transform -translate-x-1/2 bg-black/80 p-2 rounded-md z-40">
-          <div className="flex items-center gap-2">
-            <img src={GAME_ASSETS.ice || "/placeholder.svg"} alt="Ice Mining" className="w-5 h-5" />
-            <Progress value={progressBars.scavenger} className="w-40 h-2" />
-            <span className="text-xs">{formatTimeRemaining(progressBars.scavenger, 6)}</span>
-          </div>
-        </div>
-      )}
-
-      {userData.chargingWaterFilter > 0 && (
-        <div className="fixed top-44 left-1/2 transform -translate-x-1/2 bg-black/80 p-2 rounded-md z-40">
-          <div className="flex items-center gap-2">
-            <img src={GAME_ASSETS.water || "/placeholder.svg"} alt="Water Filtering" className="w-5 h-5" />
-            <Progress value={progressBars.waterFilter} className="w-40 h-2" />
-            <span className="text-xs">{formatTimeRemaining(progressBars.waterFilter, 8)}</span>
-          </div>
-        </div>
-      )}
-
-      {userData.chargingWorkShop > 0 && (
-        <div className="fixed top-56 left-1/2 transform -translate-x-1/2 bg-black/80 p-2 rounded-md z-40">
-          <div className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-orange-400" />
-            <Progress value={progressBars.workshop} className="w-40 h-2" />
-            <span className="text-xs">{formatTimeRemaining(progressBars.workshop, 10)}</span>
-          </div>
-        </div>
-      )}
-
-      {/* Power Cell Slot Progress Indicators */}
-      {powerCellSlots
-        .filter((slot) => slot.isCharging)
-        .map((slot, index) => (
-          <div
-            key={slot.id}
-            className="fixed bg-black/80 p-2 rounded-md z-40"
-            style={{
-              top: `${20 + index * 12}px`,
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <img
-                src={GAME_ASSETS.batteryCharging || "/placeholder.svg"}
-                alt={`Charging Slot ${slot.id + 1}`}
-                className="w-5 h-5"
-              />
-              <Progress value={slot.progress} className="w-40 h-2" />
-              <span className="text-xs">{formatTimeRemaining(slot.progress, 12)}</span>
-              <span className="text-xs bg-black/60 rounded-full w-5 h-5 flex items-center justify-center">
-                {slot.id + 1}
-              </span>
-            </div>
-          </div>
-        ))}
+       {/* Progress Indicators */}
+{userData.chargingPowerCell > 0 && (
+  <div className="fixed top-100 left-0 transform bg-black/80 p-2 rounded-md z-40">
+    <div className="flex items-center gap-2">
+      <img src={GAME_ASSETS.batteryCharging || "/placeholder.svg"} alt="Charging" className="w-10 h-10" />
+      <Progress value={progressBars.powerCell} className="w-40 h-2 [&>div]:bg-green-500" />
+      <span className="text-xs">{formatTimeRemaining(progressBars.powerCell, 12)}</span>
     </div>
-  )
-}
+  </div>
+)}
+
+{userData.scavengerWorking > 0 && (
+  <div className="fixed top-150 left-0 transform bg-black/80 p-2 rounded-md z-40">
+    <div className="flex items-center gap-2">
+      <img src={GAME_ASSETS.ice || "/placeholder.svg"} alt="Ice Mining" className="w-10 h-10" />
+      <Progress value={progressBars.scavenger} className="w-40 h-2 [&>div]:bg-green-500" />
+      <span className="text-xs">{formatTimeRemaining(progressBars.scavenger, 6)}</span>
+    </div>
+  </div>
+)}
+
+{userData.chargingWaterFilter > 0 && (
+  <div className="fixed top-200 left-0 transform bg-black/80 p-2 rounded-md z-40">
+    <div className="flex items-center gap-2">
+      <img src={GAME_ASSETS.water || "/placeholder.svg"} alt="Water Filtering" className="w-5 h-5" />
+      <Progress value={progressBars.waterFilter} className="w-40 h-2 [&>div]:bg-green-500" />
+      <span className="text-xs">{formatTimeRemaining(progressBars.waterFilter, 8)}</span>
+    </div>
+  </div>
+)}
+
+{userData.chargingWorkShop > 0 && (
+  <div className="fixed top-250 left-0 transform bg-black/80 p-2 rounded-md z-40">
+    <div className="flex items-center gap-2">
+      <Activity className="w-5 h-5 text-orange-400" />
+      <Progress value={progressBars.workshop} className="w-40 h-2 [&>div]:bg-green-500" />
+      <span className="text-xs">{formatTimeRemaining(progressBars.workshop, 10)}</span>
+    </div>
+  </div>
+)}
+
+{/* Power Cell Slot Progress Indicators */}
+{powerCellSlots
+  .filter((slot) => slot.isCharging)
+  .map((slot, index) => (
+    <div
+      key={slot.id}
+      className="fixed bg-black/80 p-2 rounded-md z-40"
+      style={{
+        top: `${300 + index * 30}px`, // Adjust vertical space (increase the value for more space between slots)
+        left: "0%", // Align with the left border
+        transform: "translateX(0%)", // No need to center horizontally, just align left
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <img
+          src={GAME_ASSETS.batteryCharging || "/placeholder.svg"}
+          alt={`Charging Slot ${slot.id + 1}`}
+          className="w-5 h-5"
+        />
+        <Progress value={slot.progress} className="w-40 h-2 [&>div]:bg-green-500" />
+        <span className="text-xs">{formatTimeRemaining(slot.progress, 12)}</span>
+        <span className="text-xs bg-black/60 rounded-full w-5 h-5 flex items-center justify-center">
+          {slot.id + 1}
+        </span>
+      </div>
+    </div>
+  ))}
+   </div>
+    )
+  }
 
 // Add TypeScript declarations for Phantom wallet at the bottom of the file
 // Add this at the end of the file, before the final closing brace
