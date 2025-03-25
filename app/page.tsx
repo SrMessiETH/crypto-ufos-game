@@ -235,6 +235,8 @@ export default function CryptoUFOsGame() {
   const [walletConnected, setWalletConnected] = useState(false)
   const [isLoadingUserData, setIsLoadingUserData] = useState(false)
   const [powerCellSlots, setPowerCellSlots] = useState<PowerCellSlot[]>([])
+  const [isMobile, setIsMobile] = useState(false)
+
 
   // Zoom state
   const [zoomLevel, setZoomLevel] = useState(1)
@@ -250,6 +252,16 @@ export default function CryptoUFOsGame() {
   const startY = useRef(0)
   const scrollLeft = useRef(0)
   const scrollTop = useRef(0)
+
+   // Detect mobile view
+   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 968) // Tailwind's 'md' breakpoint
+    }
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   // Initialize Firebase
   useEffect(() => {
@@ -1516,6 +1528,297 @@ export default function CryptoUFOsGame() {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
           <p>Loading game data...</p>
         </div>
+      </div>
+    )
+  }
+
+  // Mobile View
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col p-4">
+        <Toaster richColors position="top-right" />
+        
+        {/* Header with Wallet */}
+        <div className="flex justify-between items-center mb-4">
+          <WalletConnect
+            onConnect={handleWalletConnect}
+            onDisconnect={handleWalletDisconnect}
+            isLoading={isLoadingUserData || isLoading}
+          />
+          <Button
+            variant="ghost"
+            className="w-12 h-12 bg-contain bg-no-repeat"
+            style={{ backgroundImage: `url(${GAME_ASSETS.crown})` }}
+            onClick={() => (window.location.href = "/leaderboard")}
+          />
+        </div>
+
+        {/* Player Info Card */}
+        <Card className="w-full bg-white/40 border-white text-black mb-4">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-bold text-green-400">{userData.name || "Player"}</h3>
+              <Button variant="outline" size="sm" onClick={() => setIsNameFormOpen(true)}>
+                Change
+              </Button>
+            </div>
+            <p className="text-sm">NFTs: {userData.nfts} (Tier: {determineUserTier(userData.nfts)})</p>
+            <div className="flex items-center gap-2 mt-2">
+              <img src={GAME_ASSETS.coin} alt="UFOS" className="w-6 h-6 animate-pulse" />
+              <span className="text-yellow-400">{userData.ufos}</span>
+              <Button variant="outline" size="sm" onClick={() => setIsTransferFormOpen(true)}>Transfer</Button>
+              <Button variant="outline" size="sm" onClick={claimDailyReward}>
+                <img src={GAME_ASSETS.claim} alt="Claim" className="w-5 h-5" />
+              </Button>
+            </div>
+            <Button
+              variant="outline"
+              className="w-full mt-2"
+              onClick={() => setIsInventoryOpen(!isInventoryOpen)}
+            >
+              {isInventoryOpen ? "Hide Inventory" : "Show Inventory"}
+            </Button>
+            {isInventoryOpen && (
+              <div className="mt-2 space-y-2 p-2 bg-gray-500 rounded-md">
+                <div className="flex justify-between"><span>Empty Cells:</span><span>{userData.emptyPowerCell}</span></div>
+                <div className="flex justify-between"><span>Full Cells:</span><span>{userData.fullPowerCell}</span></div>
+                <div className="flex justify-between"><span>Broken Cells:</span><span>{userData.brokenPowerCell}</span></div>
+                <div className="flex justify-between"><span>Ice:</span><span>{userData.ice}</span></div>
+                <div className="flex justify-between"><span>Water:</span><span>{userData.water}</span></div>
+                <div className="flex justify-between"><span>Minerals:</span><span>{userData.halite}</span></div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Game Actions */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <Button onClick={() => setIsLaboratoryOpen(true)} className="h-24 bg-gray-800">
+            <img src={GAME_ASSETS.powerCellCharger} alt="Lab" className="w-12 h-12 mx-auto" />
+            Lab
+          </Button>
+          <Button onClick={() => setIsMarketOpen(true)} className="h-24 bg-gray-800">
+            <img src={GAME_ASSETS.market} alt="Market" className="w-12 h-12 mx-auto" />
+            Market
+          </Button>
+          <Button
+            onClick={userData.scavengerWorkingEnd > 0 ? claimScavengerResults : startScavenger}
+            className="h-24 bg-gray-800"
+          >
+            <img src={GAME_ASSETS.iceMiner} alt="Scavenger" className="w-12 h-12 mx-auto" />
+            Scavenger
+          </Button>
+          <Button
+            onClick={userData.claimableEmptyPowerCell > 0 ? claimWorkshopResults : startWorkshop}
+            className="h-24 bg-gray-800"
+          >
+            <img src={GAME_ASSETS.workshop} alt="Workshop" className="w-12 h-12 mx-auto" />
+            Workshop
+          </Button>
+          <Button
+            onClick={userData.claimableWater > 0 ? claimWaterFilterResults : startWaterFilter}
+            className="h-24 bg-gray-800"
+          >
+            <img src={GAME_ASSETS.waterFilter} alt="Water Filter" className="w-12 h-12 mx-auto" />
+            Filter
+          </Button>
+        </div>
+
+        {/* Progress Indicators */}
+        <div className="space-y-2">
+          {userData.chargingPowerCell > 0 && (
+            <div className="flex items-center gap-2 bg-black/80 p-2 rounded-md">
+              <img src={GAME_ASSETS.batteryCharging} alt="Charging" className="w-6 h-6" />
+              <Progress value={progressBars.powerCell} className="w-full h-2 [&>div]:bg-green-500" />
+              <span className="text-xs">{formatTimeRemaining(progressBars.powerCell, 12)}</span>
+            </div>
+          )}
+          {userData.scavengerWorking > 0 && (
+            <div className="flex items-center gap-2 bg-black/80 p-2 rounded-md">
+              <img src={GAME_ASSETS.ice} alt="Mining" className="w-6 h-6" />
+              <Progress value={progressBars.scavenger} className="w-full h-2 [&>div]:bg-green-500" />
+              <span className="text-xs">{formatTimeRemaining(progressBars.scavenger, 6)}</span>
+            </div>
+          )}
+          {userData.chargingWaterFilter > 0 && (
+            <div className="flex items-center gap-2 bg-black/80 p-2 rounded-md">
+              <img src={GAME_ASSETS.water} alt="Filtering" className="w-6 h-6" />
+              <Progress value={progressBars.waterFilter} className="w-full h-2 [&>div]:bg-green-500" />
+              <span className="text-xs">{formatTimeRemaining(progressBars.waterFilter, 8)}</span>
+            </div>
+          )}
+          {userData.chargingWorkShop > 0 && (
+            <div className="flex items-center gap-2 bg-black/80 p-2 rounded-md">
+              <Activity className="w-6 h-6 text-orange-400" />
+              <Progress value={progressBars.workshop} className="w-full h-2 [&>div]:bg-green-500" />
+              <span className="text-xs">{formatTimeRemaining(progressBars.workshop, 10)}</span>
+            </div>
+          )}
+          {powerCellSlots.filter((slot) => slot.isCharging).map((slot, index) => (
+            <div key={slot.id} className="flex items-center gap-2 bg-black/80 p-2 rounded-md">
+              <img src={GAME_ASSETS.batteryCharging} alt={`Slot ${slot.id + 1}`} className="w-6 h-6" />
+              <Progress value={slot.progress} className="w-full h-2 [&>div]:bg-green-500" />
+              <span className="text-xs">{formatTimeRemaining(slot.progress, 12)}</span>
+              <span className="text-xs bg-black/60 rounded-full w-5 h-5 flex items-center justify-center">{slot.id + 1}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Modals */}
+        {isLaboratoryOpen && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <Card className="w-full max-w-md bg-white/70 border-white">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h2 className="text-lg font-bold text-green-400">Power Cell Charger</h2>
+                    <p className="text-xs text-red-400">
+                      {getPowerCellSlots(userData.nfts)} slots (Tier {determineUserTier(userData.nfts)})
+                    </p>
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={() => setIsLaboratoryOpen(false)}>X</Button>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {powerCellSlots.map((slot) => (
+                    <div key={slot.id} className="relative">
+                      <Button
+                        variant="ghost"
+                        className="w-full h-20 bg-transparent border border-gray-700 rounded-md flex items-center justify-center"
+                        onClick={() => slot.isClaimable ? claimPowerCellSlot(slot.id) : startPowerCellSlotCharging(slot.id)}
+                      >
+                        <img
+                          src={getBatteryImage(slot.isCharging, slot.isClaimable)}
+                          alt="Power Cell"
+                          className="w-12 h-12"
+                          style={{ animation: slot.isCharging ? "pulse 2s infinite" : "none" }}
+                        />
+                      </Button>
+                      {slot.isCharging && (
+                        <div className="mt-1">
+                          <Progress value={slot.progress} className="h-1 [&>div]:bg-green-500" />
+                          <p className="text-xs">{formatTimeRemaining(slot.progress, 12)}</p>
+                        </div>
+                      )}
+                      <div className="absolute top-1 left-1 bg-black/30 rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                        {slot.id + 1}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        {isMarketOpen && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <Card className="w-full max-w-md bg-black border-white" style={{ backgroundImage: `url(${GAME_ASSETS.marketBg})`, backgroundSize: "cover" }}>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-bold text-amber-400">Market</h2>
+                  <Button variant="ghost" size="sm" onClick={() => setIsMarketOpen(false)}>X</Button>
+                </div>
+                <Tabs defaultValue="buy" onValueChange={setActiveMarketTab}>
+                  <TabsList className="grid grid-cols-2 w-full">
+                    <TabsTrigger value="buy">Buy</TabsTrigger>
+                    <TabsTrigger value="sell">Sell</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="buy" className="mt-2">
+                    <div className="flex items-center justify-between p-2 border border-gray-700 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <img src={GAME_ASSETS.batteryEmpty} alt="Empty Power Cell" className="w-10 h-10" />
+                        <div>
+                          <h3 className="text-sm text-red-500">Empty Cell</h3>
+                          <p className="text-xs text-yellow-400">50 UFOS</p>
+                        </div>
+                      </div>
+                      <Button size="sm" onClick={buyEmptyPowerCell}>Buy</Button>
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="sell" className="mt-2">
+                    <div className="flex items-center justify-between p-2 border border-gray-700 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <img src={GAME_ASSETS.batteryFull} alt="Full Power Cell" className="w-10 h-10" />
+                        <div>
+                          <h3 className="text-sm text-green-500">Full Cell</h3>
+                          <p className="text-xs text-yellow-400">100 UFOS</p>
+                        </div>
+                      </div>
+                      <Button size="sm" onClick={sellFullPowerCell}>Sell</Button>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        {isTransferFormOpen && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <Card className="w-full max-w-md bg-black border-white">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-bold text-yellow-400">Transfer UFOS</h2>
+                  <Button variant="ghost" size="sm" onClick={() => setIsTransferFormOpen(false)}>X</Button>
+                </div>
+                <form onSubmit={handleTransferUfos} className="space-y-4">
+                  <div>
+                    <label className="block mb-1 text-sm">Recipient Wallet</label>
+                    <Input
+                      type="text"
+                      value={transferWallet}
+                      onChange={(e) => setTransferWallet(e.target.value)}
+                      placeholder="Wallet address"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-sm">Amount</label>
+                    <Input
+                      type="number"
+                      value={transferAmount}
+                      onChange={(e) => setTransferAmount(Number(e.target.value))}
+                      min="1"
+                      max={userData.ufos}
+                      required
+                    />
+                    <p className="text-xs mt-1">Available: {userData.ufos} UFOS</p>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button type="button" variant="outline" onClick={() => setIsTransferFormOpen(false)}>Cancel</Button>
+                    <Button type="submit">Transfer</Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        {isNameFormOpen && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <Card className="w-full max-w-md bg-black border-white">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-bold text-green-400">Change Name</h2>
+                  <Button variant="ghost" size="sm" onClick={() => setIsNameFormOpen(false)}>X</Button>
+                </div>
+                <form onSubmit={handleChangeName} className="space-y-4">
+                  <div>
+                    <label className="block mb-1 text-sm">New Name</label>
+                    <Input
+                      type="text"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      placeholder="Enter new name"
+                      required
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button type="button" variant="outline" onClick={() => setIsNameFormOpen(false)}>Cancel</Button>
+                    <Button type="submit">Save</Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     )
   }
