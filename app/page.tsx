@@ -1532,28 +1532,30 @@ export default function CryptoUFOsGame() {
     )
   }
 
-  // Mobile View
+   // Mobile View
   if (isMobile) {
     return (
       <div className="min-h-screen bg-black text-white flex flex-col p-4">
         <Toaster richColors position="top-right" />
         
-        {/* Header with Wallet */}
+        {/* Header with Wallet Connect and Leaderboard */}
         <div className="flex justify-between items-center mb-4">
-          <WalletConnect
-            onConnect={handleWalletConnect}
-            onDisconnect={handleWalletDisconnect}
-            isLoading={isLoadingUserData || isLoading}
-          />
+          <div className="flex items-center gap-2">
+            <WalletConnect
+              onConnect={handleWalletConnect}
+              onDisconnect={handleWalletDisconnect}
+              isLoading={isLoadingUserData || isLoading}
+            />
+          </div>
           <Button
             variant="ghost"
-            className="w-12 h-12 bg-contain bg-no-repeat"
+            className="w-10 h-10 bg-contain bg-no-repeat"
             style={{ backgroundImage: `url(${GAME_ASSETS.crown})` }}
             onClick={() => (window.location.href = "/leaderboard")}
           />
         </div>
 
-        {/* Player Info Card */}
+        {/* Wallet Info Card */}
         <Card className="w-full bg-white/40 border-white text-black mb-4">
           <CardContent className="p-4">
             <div className="flex justify-between items-center mb-2">
