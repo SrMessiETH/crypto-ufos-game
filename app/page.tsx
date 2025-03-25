@@ -256,7 +256,11 @@ export default function CryptoUFOsGame() {
    // Detect mobile view
    useEffect(() => {
     const checkMobile = () => {
+<<<<<<< HEAD
       setIsMobile(window.innerWidth < 768) // Tailwind's 'md' breakpoint
+=======
+      setIsMobile(window.innerWidth < 968) // Tailwind's 'md' breakpoint
+>>>>>>> ad7b07d9896bb35c953ebf3d7bd73e93014c84df
     }
     checkMobile()
     window.addEventListener("resize", checkMobile)
@@ -1532,7 +1536,11 @@ export default function CryptoUFOsGame() {
     )
   }
 
+<<<<<<< HEAD
   // Mobile View
+=======
+   // Mobile View
+>>>>>>> ad7b07d9896bb35c953ebf3d7bd73e93014c84df
   if (isMobile) {
     return (
       <div className="min-h-screen bg-black text-white flex flex-col p-4">
